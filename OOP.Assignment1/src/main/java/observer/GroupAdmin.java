@@ -1,69 +1,78 @@
 package observer;
-
 import java.util.*;
 
-public class GroupAdmin implements Sender {
-    public ArrayList<Member> memberlist; //An ArrayList that holds all the observers
-    public UndoableStringBuilder usb; //An object of UndoableStringBuilder
-
-    //A constructor of GroupAdmin
-    public GroupAdmin() {
-        this.memberlist = new ArrayList<>();
+public class GroupAdmin implements Sender{
+    public ArrayList<Member> member_list;
+    public UndoableStringBuilder usb;
+    /**
+     constructor for new GroupAdmin which is the observable in this project
+     */
+    public GroupAdmin()
+    {
+        this.member_list = new ArrayList<>();
         this.usb = new UndoableStringBuilder();
     }
 
     /**
-     * Register an observer
+     * register a new member(observer) to the GroupAdmin member list.
+     * a member who registered will get all updates on changes made to the UndoableStringBuilder (shallow copy)
      * @param obj
      */
     @Override
-    public void register(Member obj) {
-        memberlist.add(obj);
+    public void register(Member obj)
+    {
+        member_list.add(obj);
     }
 
     /**
-     * Unregister an observer
+     * remove a member from the GroupAdmin member list.
+     * the member will stop receiving updates and his usb will be set to null.
      * @param obj
      */
     @Override
-    public void unregister(Member obj) {
-        memberlist.remove(obj);
+    public void unregister(Member obj)
+    {
+        obj.update(null);
+        member_list.remove(obj);
     }
 
     /**
-     * Use the function insert and notify
+     * uses the insert function in UndoableStringBuilder and notifies the all the members that are registered
      * @param offset
      * @param obj
      */
     @Override
-    public void insert(int offset, String obj) {
-        this.usb.insert(offset, obj);
+    public void insert(int offset, String obj)
+    {
+        this.usb.insert(offset,obj);
         notify(this.usb);
     }
 
     /**
-     * Use the function append and notify
+     * uses the append function in UndoableStringBuilder and notifies the all the members that are registered
      * @param obj
      */
     @Override
-    public void append(String obj) {
+    public void append(String obj)
+    {
         this.usb.append(obj);
         notify(this.usb);
     }
 
     /**
-     * Use the function delete and notify
+     * uses the delete function in UndoableStringBuilder and notifies the all the members that are registered
      * @param start
      * @param end
      */
     @Override
-    public void delete(int start, int end) {
-        this.usb.delete(start, end);
+    public void delete(int start, int end)
+    {
+        this.usb.delete(start,end);
         notify(this.usb);
     }
 
     /**
-     * Use the function undo and notify all the observers
+     * uses the undo function in UndoableStringBuilder and notifies the all the members that are registered
      */
     @Override
     public void undo() {
@@ -72,11 +81,13 @@ public class GroupAdmin implements Sender {
     }
 
     /**
-     * Notify all the observers
+     * notifies all the members that are registered to the GroupAdmin to update their UnDoableStringBuilder
      * @param usb
+     * running time complexity O(n), n is the size of the arraylist that contains all the members that are registered to the GroupAdmin.
      */
-    public void notify(UndoableStringBuilder usb) {
-        for (Member member : this.memberlist)
+    public void notify(UndoableStringBuilder usb)
+    {
+        for(Member member : this.member_list)
             member.update(usb);
     }
 }

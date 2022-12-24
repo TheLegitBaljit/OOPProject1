@@ -26,7 +26,33 @@ public class Tests {
         logger.info(() -> JvmUtilities.jvmInfo());
     }
     @Test
-    public void testappend(){
+    public void testRegister(){
+        GroupAdmin a1 = new GroupAdmin();
+        ConcreteMember yuval = new ConcreteMember();
+        a1.register(yuval);
+        assertEquals(true,a1.member_list.contains(yuval));
+    }
+    @Test
+    public void testUnregister()
+    {
+        GroupAdmin a1 = new GroupAdmin();
+        ConcreteMember yuval = new ConcreteMember();
+        a1.register(yuval);
+        assertEquals(true,a1.member_list.contains(yuval));
+        a1.unregister(yuval);
+        assertEquals(false,a1.member_list.contains(yuval));
+    }
+    @Test void testNotify()
+    {
+        GroupAdmin a1 = new GroupAdmin();
+        ConcreteMember yuval = new ConcreteMember();
+        a1.register(yuval);
+        assertEquals(null,yuval.usb);
+        a1.append("");
+        assertEquals(a1.usb,yuval.usb);
+    }
+    @Test
+    public void testAppend(){
         GroupAdmin a1 = new GroupAdmin();
         ConcreteMember yuval = new ConcreteMember();
         ConcreteMember abraham = new ConcreteMember();
@@ -36,7 +62,7 @@ public class Tests {
         assertEquals("hello",yuval.usb.toString(),abraham.usb.toString());
     }
     @Test
-    public void testinsert(){
+    public void testInsert(){
         GroupAdmin a1 = new GroupAdmin();
         ConcreteMember yuval = new ConcreteMember();
         ConcreteMember abraham = new ConcreteMember();
@@ -47,7 +73,7 @@ public class Tests {
         assertEquals("testtestinsert",yuval.usb.toString(),abraham.usb.toString());
     }
     @Test
-    public void testdelete(){
+    public void testDelete(){
         GroupAdmin a1 = new GroupAdmin();
         ConcreteMember yuval = new ConcreteMember();
         ConcreteMember abraham = new ConcreteMember();
@@ -58,7 +84,7 @@ public class Tests {
         assertEquals("test",yuval.usb.toString(),abraham.usb.toString());
     }
     @Test
-    public void testundo(){
+    public void testUndo(){
         GroupAdmin a1 = new GroupAdmin();
         ConcreteMember yuval = new ConcreteMember();
         ConcreteMember abraham = new ConcreteMember();
@@ -72,7 +98,7 @@ public class Tests {
         assertEquals("",yuval.usb.toString(),abraham.usb.toString());
     }
     @Test
-    public void testcopy(){
+    public void testShallowCopy(){
         GroupAdmin a1 = new GroupAdmin();
         ConcreteMember yuval = new ConcreteMember();
         ConcreteMember abraham = new ConcreteMember();
@@ -80,24 +106,25 @@ public class Tests {
         a1.register(yuval);
         a1.append("test");
         a1.append("undo");
+        assertEquals(a1.usb,yuval.usb);
+        assertEquals(a1.usb,abraham.usb);
         a1.unregister(yuval);
         a1.append("test");
         ConcreteMember yarin = new ConcreteMember();
         a1.register(yarin);
-        assertEquals("testundo",yuval.usb.toString());
-        assertEquals("testundotest",abraham.usb.toString());
+        assertEquals(a1.usb,abraham.usb);
         assertEquals(null,yarin.usb);
+        assertEquals(null,yuval.usb);
     }
     @Test
-    public void testupdate()
-    {
+    public void testUpdate() {
         GroupAdmin a1 = new GroupAdmin();
         a1.append("hello");
         a1.append("world");
         ConcreteMember yarin = new ConcreteMember();
-        assertEquals(null,yarin.usb);
+        assertEquals(null, yarin.usb);
         a1.register(yarin);
         a1.append("test");
-        assertEquals("helloworldtest",yarin.usb.toString());
+        assertEquals("helloworldtest", yarin.usb.toString());
     }
 }
