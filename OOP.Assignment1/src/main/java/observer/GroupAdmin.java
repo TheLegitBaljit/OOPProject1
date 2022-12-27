@@ -14,30 +14,37 @@ public class GroupAdmin implements Sender{
     }
 
     /**
-     * register a new member(observer) to the GroupAdmin member list.
+     * register a new ConcreteMember(observer) to the GroupAdmin(observable) member list.
      * a member who registered will get all updates on changes made to the UndoableStringBuilder (shallow copy)
+     * also, his usb will get the latest version of the GroupAdmin's usb
      * @param obj
      */
     @Override
     public void register(Member obj)
     {
-        member_list.add(obj);
+        ConcreteMember m = (ConcreteMember) obj;
+        if(member_list.contains(m) == false && m.usb == null) {
+            member_list.add(m);
+            notify(m,this.usb);
+        }
     }
 
     /**
-     * remove a member from the GroupAdmin member list.
+     * remove a ConcreteMember(observer) from the GroupAdmin(observable) member list.
      * the member will stop receiving updates and his usb will be set to null.
      * @param obj
      */
     @Override
     public void unregister(Member obj)
     {
+        if(member_list.contains(obj)){
         obj.update(null);
         member_list.remove(obj);
+        }
     }
 
     /**
-     * uses the insert function in UndoableStringBuilder and notifies the all the members that are registered
+     * uses the insert function in UndoableStringBuilder changes the GroupAdmin's usb
      * @param offset
      * @param obj
      */
@@ -45,22 +52,20 @@ public class GroupAdmin implements Sender{
     public void insert(int offset, String obj)
     {
         this.usb.insert(offset,obj);
-        notify(this.usb);
     }
 
     /**
-     * uses the append function in UndoableStringBuilder and notifies the all the members that are registered
+     * uses the append function in UndoableStringBuilder changes the GroupAdmin's usb
      * @param obj
      */
     @Override
     public void append(String obj)
     {
         this.usb.append(obj);
-        notify(this.usb);
     }
 
     /**
-     * uses the delete function in UndoableStringBuilder and notifies the all the members that are registered
+     * uses the delete function in UndoableStringBuilder changes the GroupAdmin's usb
      * @param start
      * @param end
      */
@@ -68,26 +73,22 @@ public class GroupAdmin implements Sender{
     public void delete(int start, int end)
     {
         this.usb.delete(start,end);
-        notify(this.usb);
     }
 
     /**
-     * uses the undo function in UndoableStringBuilder and notifies the all the members that are registered
+     * uses the undo function in UndoableStringBuilder, changes the GroupAdmin's usb
      */
     @Override
     public void undo() {
         this.usb.undo();
-        notify(this.usb);
     }
 
     /**
-     * notifies all the members that are registered to the GroupAdmin to update their UnDoableStringBuilder
+     * notifies the member who registered to the GroupAdmin, we use it each time we register a new member to the GroupAdmin
      * @param usb
-     * running time complexity O(n), n is the size of the arraylist that contains all the members that are registered to the GroupAdmin.
      */
-    public void notify(UndoableStringBuilder usb)
+    public void notify(Member m,UndoableStringBuilder usb)
     {
-        for(Member member : this.member_list)
-            member.update(usb);
+        m.update(usb);
     }
 }

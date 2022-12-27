@@ -21,37 +21,7 @@ public class UndoableStringBuilder {
 
     }
 
-    /**
-     * Deep copy of the object
-     * @param other
-     */
-    public UndoableStringBuilder (UndoableStringBuilder other) //deep copy of UndoableStringBuilder
-    {
-        this.first = new StringBuilder(other.first);
-        this.str = new StringBuilder(other.str);
-        this.s = CopyStack(other.s);
-    }
 
-    /**
-     * Copy the stack
-     * @param k
-     * @return A new stack with copied values
-     */
-    private Stack<StringBuilder> CopyStack(Stack<StringBuilder> k) //deep copy of the stack
-    {
-        this.s = new Stack<>();
-        for (int i = k.size()-1; i >=0; i--) {
-            this.s.push(k.get(i));
-        }
-        return this.s;
-    }
-    public UndoableStringBuilder(String str)
-    {
-        this.first = new StringBuilder(str);
-        this.str = new StringBuilder(str);
-        this.s = new Stack<StringBuilder>();
-        this.s.push(new StringBuilder(str));
-    }
     public UndoableStringBuilder(StringBuilder str)
     {
         this.first = str;
